@@ -48,16 +48,27 @@ class Solution
     double fractionalKnapsack(int W, Item arr[], int n) 
     {
         // Your code here
-       // Sort items by value-to-weight ratio in descending order
-        Arrays.sort(arr, (a, b) -> Double.compare((double)b.value / b.weight, (double)a.value / a.weight));
+        
+        double ratio[][] = new double[n][2];
+        
+        for(int i=0; i<n; i++){
+            ratio[i][0] = i;
+            ratio[i][1] = arr[i].value / (double)arr[i].weight ;
+        }
+        
+       // Sort items by value-to-weight ratio in ascending order
+        Arrays.sort(ratio, Comparator.comparingDouble(o -> o[1]));
+        int m = ratio.length;
         double total = 0;
-        for(int i = 0; i<n; i++){
-            if(arr[i].weight <= W){
-                total += arr[i].value;
-                W = W-arr[i].weight;
+        for(int i = m-1; i>=0; i--){
+            //take the index of higest ratio
+            int idx = (int)ratio[i][0];
+            if(arr[idx].weight <= W){
+                total += arr[idx].value;
+                W = W-arr[idx].weight;
             }
             else{
-                total += (double)arr[i].value / arr[i].weight  * W;
+                total += (double)arr[idx].value / arr[idx].weight  * W;
                break;
             }
         }
